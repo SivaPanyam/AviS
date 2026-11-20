@@ -11,5 +11,9 @@
 
 ## Decision ID: DEC-2026-002
 - **Date:** 2026-11-20
-- **Decision:** Modular Monolith architecture using FastAPI + PostgreSQL + Qdrant + MinIO + Redis.
-- **Context:** Minimizing operational complexity for on-prem/customer-hosted deployments while maintaining asynchronous document processing and strict vector tenancy.
+- **Decision:** Modular Architecture with Desktop Packaging.
+- **Context:** Transition from a pure cloud SaaS model to a **downloadable, local-first desktop application**.
+- **Consequences:**
+  - Eliminates cloud hosting compliance friction for CA firms who refuse to upload client audit documents to third-party web servers.
+  - Packages the React UI and embedded FastAPI core as a downloadable native desktop application.
+  - Decouples the LLM model serving layer for future evaluation (local quantized weights or secure private endpoints).
