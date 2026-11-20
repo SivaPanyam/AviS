@@ -12,15 +12,17 @@ from qdrant_client.models import (
 from app.core.config import settings
 
 class VectorStoreService:
-    def __init__(self, host: Optional[str] = None, port: Optional[int] = None):
-        self.host = host or settings.QDRANT_HOST
-        self.port = port or settings.QDRANT_PORT
+    def __init__(self):
         self.collection_name = "avis_knowledge_chunks"
         self._client: Optional[AsyncQdrantClient] = None
 
     async def get_client(self) -> AsyncQdrantClient:
         if self._client is None:
-            self._client = AsyncQdrantClient(host=self.host, port=self.port)
+            if settings.USE_EMBEDDED_QDRANT:
+                # Embedded path-based local vector store: zero Docker required
+                self._client = AsyncQdrantClient(path=str(settings.QDRANT_STORAGE_PATH))
+            else:
+                self._client = AsyncQdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
         return self._client
 
     async def ensure_collection(self, vector_dim: int = 384):
@@ -39,6 +41,7 @@ class VectorStoreService:
         chunks: List[Dict[str, Any]],
         embeddings: List[List[float]],
     ):
+        await self.ensure_collection(vector_dim=len(embeddings[0]) if embeddings else 384)
         client = await self.get_client()
         points = []
         for chunk, embedding in zip(chunks, embeddings):
@@ -63,11 +66,10 @@ class VectorStoreService:
         workspace_id: uuid.UUID,
         query_embedding: List[float],
         limit: int = 5,
-        score_threshold: float = 0.65,
+        score_threshold: float = 0.50,
     ) -> List[Dict[str, Any]]:
         client = await self.get_client()
         
-        # Enforce server-side tenant isolation
         tenant_filter = Filter(
             must=[
                 FieldCondition(
