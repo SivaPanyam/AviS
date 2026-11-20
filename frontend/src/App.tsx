@@ -16,8 +16,8 @@ interface ChatMessage {
 }
 
 export default function App() {
-  const [workspaceId, setWorkspaceId] = useState<string>('kamat-ca-demo-id');
-  const [firmName, setFirmName] = useState<string>('Kamat & Associates Chartered Accountants');
+  const workspaceId = 'kamat-ca-demo-id';
+  const firmName = 'Kamat & Associates Chartered Accountants';
   const [documents, setDocuments] = useState<Array<{ name: string; size: string; status: string }>>([
     { name: 'Income_Tax_Act_Sec_44AB_Guidance.pdf', size: '1.2 MB', status: 'Indexed' },
     { name: 'GST_Circular_2026_InputTaxCredit.docx', size: '420 KB', status: 'Indexed' },
