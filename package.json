@@ -1,0 +1,31 @@
+{
+  "name": "avis-desktop",
+  "version": "0.1.0",
+  "description": "AviS - Private Compliance Knowledge Assistant for Indian CA Firms",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win"
+  },
+  "author": "Siva Panyam",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.avis.desktop",
+    "productName": "AviS",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "files": [
+      "electron/**/*",
+      "frontend/dist/**/*",
+      "backend/dist/avis-core/**/*"
+    ]
+  }
+}
